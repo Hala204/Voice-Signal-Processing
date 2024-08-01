@@ -31,3 +31,17 @@ filteredSignal = lowpass(m, 4000, fs);
 mseError = immse(m, filteredSignal);
 disp("Mean Squared Error: ")
 disp(mseError)
+
+%% Part 6
+
+% Amplitude Modulation of the recorded signal
+modulatedSignal = ammod(m, fs, 1000000);
+spectrumAM = fft(modulatedSignal);
+signalLength = length(m);
+normalizedSpectrum = abs(spectrumAM / signalLength);
+halfSpectrum = normalizedSpectrum(1:signalLength/2+1);
+halfSpectrum(2:end-1) = 2 * halfSpectrum(2:end-1);
+figure; plot(halfSpectrum);
+title('Spectrum of AM Signal');  
+xlabel('Frequency (Hz)');
+
