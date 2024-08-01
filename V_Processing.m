@@ -19,3 +19,15 @@ spectrum = fftshift(temp);
 figure; plot(frequencyAxis, abs(spectrum));
 title('Amplitude Spectrum');  
 xlabel('Frequency [Hz]');
+
+
+%% Part 3&4&5
+
+% Low-Pass Filter below 4 kHz
+lowpass(m, 4000, fs);
+filteredSignal = lowpass(m, 4000, fs);
+
+% Mean Squared Error between the original and filtered signals
+mseError = immse(m, filteredSignal);
+disp("Mean Squared Error: ")
+disp(mseError)
