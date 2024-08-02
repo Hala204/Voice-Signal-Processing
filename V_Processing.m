@@ -45,3 +45,16 @@ figure; plot(halfSpectrum);
 title('Spectrum of AM Signal');  
 xlabel('Frequency (Hz)');
 
+
+%% Part 7&8
+
+% Envelope Detection
+envelope = abs(hilbert(modulatedSignal));
+figure; plot(envelope);
+title('Envelope of AM Signal');
+
+% Mean Squared Error between the original and the detected envelope
+mseError = immse(m, envelope);
+disp("Mean Squared Error: ");
+disp(mseError);
+
