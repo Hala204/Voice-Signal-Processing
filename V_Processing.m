@@ -58,3 +58,23 @@ mseError = immse(m, envelope);
 disp("Mean Squared Error: ");
 disp(mseError);
 
+%% Part 9
+
+% Add noise to the signal
+noisySignal = awgn(m, 10);
+
+% Amplitude Modulation of the noisy signal
+modulatedNoisySignal = ammod(noisySignal, fs, 1000000);
+spectrumAMNoisy = fft(modulatedNoisySignal);
+signalLength = length(m);
+normalizedSpectrum = abs(spectrumAMNoisy / signalLength);
+halfSpectrum = normalizedSpectrum(1:signalLength/2+1);
+halfSpectrum(2:end-1) = 2 * halfSpectrum(2:end-1);
+figure; plot(halfSpectrum);
+title('Spectrum of AM Noisy Signal');  
+xlabel('Frequency (Hz)');
+
+% Envelope Detection of the modulated noisy signal
+envelopeNoisy = abs(hilbert(modulatedNoisySignal));
+figure; plot(envelopeNoisy);
+title('Envelope of AM Noisy Signal');
