@@ -78,3 +78,72 @@ xlabel('Frequency (Hz)');
 envelopeNoisy = abs(hilbert(modulatedNoisySignal));
 figure; plot(envelopeNoisy);
 title('Envelope of AM Noisy Signal');
+
+
+
+%% Part 10
+
+% Read audio file
+[m, fs] = audioread('Guitar.mp3');
+t = 1 / fs;             
+Len = length(m);          
+t = (0:Len-1) * t;        
+s = size(m, 1);
+figure; stem(t, m);
+title('Message in Time Domain');  
+xlabel('Time (seconds)');
+
+% Plot the spectrum
+freqResolution = fs / s;
+frequencyAxis = (-(s/2):(s/2)-1) * freqResolution;
+temp = fft(m) / s;        
+spectrum = fftshift(temp);
+figure; plot(frequencyAxis, abs(spectrum));
+title('Amplitude Spectrum');  
+xlabel('Frequency (Hz)');
+
+% Low-Pass Filter below 4 kHz
+filtered = lowpass(m, 4000, fs);
+
+% Error between original and filtered signal
+mseError = immse(m, filtered);
+disp("The error =");
+disp(mseError);
+
+% Frequency Modulation of the recorded signal
+FMsignal = fmmod(m, fs, 1000000, 2);
+
+% Spectrum of FM modulated signal
+spectrumFM = fft(FMsignal);
+signalLength = length(m);
+normalizedFM = abs(spectrumFM / signalLength);
+halfSpectrumFM = normalizedFM(1:signalLength/2+1);
+halfSpectrumFM(2:end-1) = 2 * halfSpectrumFM(2:end-1);
+figure; plot(halfSpectrumFM);
+title('Spectrum of FM Signal');  
+xlabel('Frequency (Hz)');
+
+% Envelope Detection of FM signal
+envelopeFM = abs(hilbert(FMsignal));
+figure; plot(envelopeFM);
+title('Envelope of FM Signal');
+
+% Add noise to the signal
+noisySignal = awgn(m, 10);
+
+% Frequency Modulation of the noisy signal
+FM_modulatedNoisySignal = fmmod(noisySignal, fs, 1000000, 2);
+
+% Spectrum of FM modulated noisy signal
+spectrumFMNoisy = fft(FM_modulatedNoisySignal);
+normalizedFMNoisy = abs(spectrumFMNoisy / signalLength);
+halfSpectrumFMNoisy = normalizedFMNoisy(1:signalLength/2+1);
+halfSpectrumFMNoisy(2:end-1) = 2 * halfSpectrumFMNoisy(2:end-1);
+figure; plot(halfSpectrumFMNoisy);
+title('Spectrum of FM Noisy Signal');  
+xlabel('Frequency (Hz)');
+
+% Envelope Detection of FM modulated noisy signal
+envelopeFMNoisy = abs(hilbert(FM_modulatedNoisySignal));
+figure; plot(envelopeFMNoisy);
+title('Envelope of FM Noisy Signal');
